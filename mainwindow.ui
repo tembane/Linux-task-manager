@@ -54,9 +54,37 @@
         <widget class="QLineEdit" name="lineEdit"/>
        </item>
        <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Search by:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_2">
+         <item>
+          <property name="text">
+           <string>PID</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Name</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="pushButton_2">
          <property name="text">
-          <string>Enter</string>
+          <string>search</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_3">
+         <property name="text">
+          <string>delete</string>
          </property>
         </widget>
        </item>
@@ -76,7 +104,7 @@
        <item>
         <widget class="QPushButton" name="pushButton">
          <property name="text">
-          <string>Update</string>
+          <string>load</string>
          </property>
         </widget>
        </item>
@@ -92,6 +120,11 @@
        <column>
         <property name="text">
          <string>Name</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Status</string>
         </property>
        </column>
        <column>

@@ -10,7 +10,7 @@
 #include <QFormLayout>
 #include <QGridLayout>
 #include <QTableWidget>
-
+#include <QMessageBox>
 #include <QPushButton>
 #include <QPixmap>
 #include <QIcon>
@@ -36,22 +36,20 @@ public:
 
 private slots:
     void on_comboBox_currentTextChanged(const QString &arg1);
-
+    void on_comboBox_2_currentTextChanged(const QString &arg1);
     void on_pushButton_clicked();
-
     void on_pushButton_2_clicked();
-
+    void on_pushButton_3_clicked();
 private:
     std::vector<QLabel*> pids_label_vec;
     std::vector<QLabel*> threads_label_vec;
     std::vector<QLabel*> memory_label_vec;
     std::vector<QLabel*> username_label_vec;
     std::vector<QLabel*> processname_label_vec;
-
+    int search_type = 0;
     int sorting_type = 0;
     QGridLayout *g = new QGridLayout();
     std::vector<QHBoxLayout*> h;
-
     Processes processes;
     Ui::MainWindow *ui;
 };

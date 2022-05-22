@@ -8,13 +8,11 @@ Processes::Processes() {
 std::vector<ProcessInfo> Processes::get_process_array(){
    return process_array;
 }
-
 Processes::Processes(std::vector<ProcessInfo> vec){
     if(!process_array.empty())
         process_array.clear();
     process_array = vec;
 }
-
 void Processes::set_process_array() {
     std::string str;
     int i = 0, pid = 0;
@@ -33,20 +31,6 @@ void Processes::set_process_array() {
         i++;
     }
 }
-void Processes::output_process_array() {
-    for (auto & i : process_array) {
-        i.output_object();
-    }
-}
-void Processes::output_process_array_by_name() {
-    std::string str;
-    std::cout << "Enter process name" << std::endl;
-    fflush(NULL);
-    std::getline(std::cin, str);
-    for (auto  & i : process_array){
-        i.output_obj_by_name(str);
-    }
-}
 void Processes::sort_process_array() {
     std::sort(process_array.begin(), process_array.end());
 }
@@ -59,12 +43,7 @@ void Processes::sort_process_array_by_name() {
             return false;
     });
 }
-
-void Processes::delProcesses() {
-    std::cout<<"Enter pid" << std::endl;
-    int pid;
-    fflush(NULL);
-    std::cin >> pid;
+void Processes::delProcesses(int pid){
     kill(pid, 9);
     process_array.clear();
     set_process_array();
@@ -79,8 +58,7 @@ void Processes::sort_process_array_by_mem() {
                       return false;
     });
 }
-
-void Processes::find_process_array_by_pid(int source_pid) {
+ProcessInfo Processes::find_process_array_by_pid(int source_pid) {
     std::vector<ProcessInfo>::iterator iterator;
     iterator = std::find_if(process_array.begin(), process_array.end(),
                          [&source_pid](const ProcessInfo& obj1){
@@ -89,10 +67,12 @@ void Processes::find_process_array_by_pid(int source_pid) {
 
     if(iterator != process_array.end()){
         auto index = std::distance(process_array.begin(), iterator);
-        process_array[index].output_object();
+        //process_array[index].output_object();
+        return process_array[index];
+    } else {
+        return ProcessInfo(0);
     }
 }
-
 std::vector<ProcessInfo> Processes::find_process_array_by_processname(std::string source_name) {
     std::vector<ProcessInfo>::iterator start_it, end_it;
     this->sort_process_array_by_name();
@@ -115,8 +95,6 @@ std::vector<ProcessInfo> Processes::find_process_array_by_processname(std::strin
 
     return tmp;
 }
-
-
 void Processes::sort_procrss_array_by_thread_numb(){
 
     std::sort(process_array.begin(), process_array.end(),

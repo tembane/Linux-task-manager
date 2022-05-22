@@ -1,23 +1,31 @@
 #include "processinfo.h"
 
 ProcessInfo::ProcessInfo() {
-    cmdline = "";
     process_name = "";
     user = "";
     threads = 0;
     pid = 0;
+    status = '-';
+    memory = 0;
 }
 ProcessInfo::ProcessInfo(int numb) {
     pid = numb;
+    status = extract_process_status();
     user = extract_user();
     memory = extract_memory();
     process_name = extract_name();
     threads = extract_threads();
-    cmdline = extract_cmdline();
+}
 
+bool ProcessInfo::empty(){
+    return pid == 0;
 }
 
 //===============GETERS===================//
+char ProcessInfo::get_status() const{
+    return status;
+}
+
 int ProcessInfo::get_pid() const {
     return pid;
 }
@@ -36,6 +44,17 @@ std::string ProcessInfo::get_username() const {
 
 
 //==============EXTRACTS===================//
+
+char ProcessInfo::extract_process_status() const{
+    std::string str = "cat /proc/";
+    str+= Parse::itoa(pid);
+    str+="/status | grep State";
+    str = Parse::systemExec(str.c_str());
+    if(str.empty())
+        return '-';
+    return str[7];
+}
+
 int ProcessInfo::extract_threads() const {
     int i = 9;
     std::string str = "cat /proc/", numbOfThreads;
@@ -70,20 +89,10 @@ int ProcessInfo::extract_memory() const {
     }
     return Parse::atoi(mem);
 }
-std::string ProcessInfo::extract_cmdline() const {
-    std::string str = "cat /proc/";
-    str += Parse::itoa(pid);
-    str += "/cmdline 2> /dev/null";
-    str = Parse::systemExec(str.c_str());
-    if(str.empty())
-        return "Cmdline not found";
-    return str;
-}
 std::string ProcessInfo::extract_name() const {
     std::string str = "cat /proc/";
     str += Parse::itoa(pid);
     str += "/comm 2> /dev/null";
-    const char * c = str.c_str();
     str = Parse::systemExec(str.c_str());
     if(!str.empty())
         str.resize(str.size() - 1);
@@ -104,30 +113,15 @@ std::string ProcessInfo::extract_user() const {
     return str;
 }
 
-void ProcessInfo::output_object() {
-    std::cout.setf(std::ios::left);
-    std::cout << "pid: " << std::setw(10) << pid
-              << "name: " << std::setw(40) << process_name
-              << "threads: " << std::setw(5) << threads
-              << "memory: " << std::setw(10) << Parse::itomem(memory)
-              << "user: " << user
-              << std::endl;
-}
-
 bool ProcessInfo::operator<(const ProcessInfo &obj) const {
     return  (pid < obj.pid);
 }
 
-void ProcessInfo::output_obj_by_name(const std::string& name) const {
-    if (name == process_name) {
-        std::cout.setf(std::ios::left);
-        std::cout << "pid: " << std::setw(10) << pid
-                  << "name: " << std::setw(40) << process_name
-                  << "threads: " << std::setw(5) << threads
-                  << "memory: " << std::setw(10) << Parse::itomem(memory)
-                  << "user: " << user
-                  << std::endl;
-    }
+void ProcessInfo::operator=(const ProcessInfo& obj){
+    this->pid = obj.pid;
+    this->process_name = obj.process_name;
+    this->status = obj.status;
+    this->threads = obj.threads;
+    this->user = obj.user;
+    this->memory = obj.memory;
 }
-
-
